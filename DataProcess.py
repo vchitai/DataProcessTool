@@ -5,17 +5,17 @@ from datetime import datetime
 import os
 
 #Settings
-firstGradeColumn = 9
+firstGradeColumn = 9#3
 studentEmailColumn = 1
 userNameColumn = 2
 
 testInputInform  = "Nhap id bai kiem tra: "
-gradeFileNameFormat  = "Grade{0}.csv"
-resultFileNameFormat = "Result{0}.csv"
-staffName = ['cxnamis', 'nguyenhaitrieu100']
+gradeFileNameFormat  = "Grade.csv"
+resultFileNameFormat = "Result.csv"
+staffName = ['cxnamis', 'nguyenhaitrieu100', 'vchitai']
 notFilterValue = ['Not Attempted']
 nullString = 'None'
-maxTime = '1:30:00'
+maxTime = input("Nhap vao thoi gian toi da lam bai theo format (h:mm:ss): ")
 reportNameCSV = 'FinalReport.csv'
 reportNameHTML = 'FinalReport.html'
 reportTemplateName = 'ReportTemplate.html'
@@ -41,8 +41,8 @@ def getTime(row):
 #Input
 testId = input(testInputInform)
 testColumn = firstGradeColumn + testId
-gradeFileName = gradeFileNameFormat.format(testId)
-resultFileName = resultFileNameFormat.format(testId)
+gradeFileName = gradeFileNameFormat;
+resultFileName = resultFileNameFormat;
 students = []
 
 #Grade File Process
@@ -69,6 +69,8 @@ with open(resultFileName,'rb') as csvfile:
                 else:
                     student.append(maxTime)
                 break
+for x in students:
+    print x
 #Sort
 students_sorted_by_time = sorted(students, key=lambda tup: tup[resTimeColumn])
 students_sorted_by_grade = sorted(students_sorted_by_time, key=lambda tup: tup[resGradeColumn], reverse=True)

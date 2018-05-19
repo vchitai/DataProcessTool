@@ -1,8 +1,13 @@
 var page = require('webpage').create();
-var user = []
+var args = require('system').args;
+var user = [];
 var fs = require('fs');
-var path = 'output.txt';
-var link = []
+var link = [];
+var usrname = args[1];
+var password = args[2];
+var rootUrl = args[3];
+var path = args[4];
+var maxAttemp = 5;
 /*
 page.onConsoleMessage = function(msg) {
   console.log("[PAGE]" + msg);
@@ -12,17 +17,17 @@ page.onResourceError = function(resourceError) {
     console.error('[DEBUG]'+resourceError.url + ': ' + resourceError.errorString);
 };*/
 
-function getDataFrom(now) {
+function getDataFrom(now, attempt) {
 	var url = link[now]
-	console.log("Going to "+ url);
+	console.log("[DEBUG] Going to "+ url);
 	page.open(url, function(status) {
+		console.log(status);
 		if (status !== 'success') {
-			console.log('Load failed');
+			if (attempt < maxAttemp) {
+				getDataFrom(now, attempt+1);
+			} 
 		}
 		else {
-			console.log(status);
-			//phantom.exit();
-			console.log('[DEBUG] Going to'+ url);
 			var us = page.evaluate(function() {
 				var un = []
 				var ta = []
@@ -42,36 +47,40 @@ function getDataFrom(now) {
 				return us;
 			})
 			for (var i = 0; i<us.length; i++)
-				user.push(us[i])
-
-			if (now < link.length-1) {
-				console.log("[DEBUG] Recursive "+ url);
-				getDataFrom(now+1)
+				user.push(us[i])			
+		}
+		if (now < link.length-1) {
+			if (now % 10 == 0) {
+				//console.log("[DEBUG] Recursive "+ url);
+				getDataFrom(now+1, 0)
 			} else {
-				fs.write(path, JSON.stringify(user), 'w');
-				page.render("example.png");
-				phantom.exit();
+				setTimeout(function() {
+					//console.log("[DEBUG] Recursive "+ url);
+					getDataFrom(now+1, 0)
+				}, 1000)
 			}
-			
+		} else {
+			fs.write(path, JSON.stringify(user), 'w');
+			//page.render("example.png");
+			phantom.exit();
 		}
 	})
 }
 
 //page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36';
-page.open('http://khanviet.org/courses/course-v1:HCMUS+Python_Beginner+2018_T3/discussion/forum/', function(status) {
+page.open(rootUrl, function(status) {
 	console.log("Loging in...");
   if (status !== 'success') {
     console.log('Unable to access network');
   } else {
-	page.evaluate(function() {
-  		$("#login-email").val("chitai.vct@gmail.com");
-  		$("#login-password").val("01218101076");
+	page.evaluate(function(usrname, password) {
+  		$("#login-email").val(usrname);
+  		$("#login-password").val(password);
   		$(".login-button").click();
-		});
+		}, usrname, password);
 	setTimeout(function() {
 		page.evaluate(function() {
 			$("#all_discussions span").click()
-			//console.log("Clicked");
   		});
 		setTimeout(function() {
 			page.evaluate(function() {
@@ -84,9 +93,8 @@ page.open('http://khanviet.org/courses/course-v1:HCMUS+Python_Beginner+2018_T3/d
 					return a;
 				});
 				link = a;
-				//console.log(link);
 
-				getDataFrom(0);
+				getDataFrom(0, 0);
 			}, 1000)
 	    }, 1000);
     }, 1000);

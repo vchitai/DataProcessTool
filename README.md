@@ -15,4 +15,4 @@
 ### Đặt file ngang hàng crawler
 ### Chạy file forumProcess
 ### Nhập email và password
-### Chờ kết quả
+### Chờ kết quả...

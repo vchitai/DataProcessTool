@@ -26,6 +26,8 @@ data = []
 for x in rawData:
     data.append(x.values())
 for x in data:
+    if ('hour' in x[1]):
+        x[1] = '1 day ago'
     if (x[1] == 'a day ago'):
         x[1] = '1 day ago'
     if (x[1] == 'about a month ago'):

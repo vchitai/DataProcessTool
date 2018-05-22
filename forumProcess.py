@@ -14,7 +14,8 @@ finalReportName = "finalForumReport.html"
 clear()
 print ("Dia chi forum: " + rootUrl)
 print ("File luu data: " + dataFile)
-command = "phantomjs forumCrawler.js " + usrname + " " + password + " " + rootUrl + " " + dataFile
+settings = "--ignore-ssl-errors=true --web-security=false --load-images=false" 
+command = "phantomjs forumCrawler.js " + usrname + " " + password + " " + rootUrl + " " + dataFile + " " + settings
 os.system(command)
 
 inputFile = open(dataFile, "r")
@@ -25,13 +26,16 @@ rawData = json.loads(inputFileContent)
 data = []
 for x in rawData:
     data.append(x.values())
+
 for x in data:
+    print x[1] + '-->',
     if ('hour' in x[1]):
         x[1] = '1 day ago'
     if (x[1] == 'a day ago'):
         x[1] = '1 day ago'
-    if (x[1] == 'about a month ago'):
+    if ('month' in x[1]):
         x[1] = '30 day ago'
+    print x[1], x[0]
     x[1] = re.search(r'\d+', x[1]).group()
         
 
@@ -62,3 +66,5 @@ outputFile.close()
 
 import webbrowser
 webbrowser.open(finalReportName,new=2)
+
+debg = input()

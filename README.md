@@ -1,6 +1,10 @@
 # Website Data Process Tool
 
-### Grade Data Process
+Công cụ xử lý dữ liệu trên Website xxx.org
+
+## Grade Data Process
+
+Các bước sử dụng: 
 
 - Đổi tên file điểm thành **Grade.csv**
 
@@ -10,13 +14,17 @@
 
 **Setting**
 
+Các thiết đặt nên thay đổi với mỗi lần sử dụng:
+
 - Cột điểm đầu tiên (-1): **firstGradeColumn** = {int} (Mỗi khóa mỗi khác)
 
 - Số lượng highlight: **top** = {int} (Optional)
 
 - Tên staff (Để lọc ra): **staffName** = Array{String} (Optional)
 
-### Forum Data Process
+## Forum Data Process
+
+Các bước sử dụng:
 
 - Download Phantomjs: https://goo.gl/1JN7FN
 
